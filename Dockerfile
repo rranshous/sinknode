@@ -1,8 +1,8 @@
-FROM rranshous/mosquitto
+FROM ruby:2.2.3
 
-RUN apt-get update
-RUN apt-get install -y ruby
+RUN gem install bundler
 
 ADD ./ /src
 WORKDIR /src
+RUN bundle
 ENTRYPOINT ["/src/sinknode.rb"]
