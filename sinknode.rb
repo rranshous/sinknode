@@ -42,7 +42,7 @@ MQTT::Client.connect(host: target_host, port: target_port.to_i) do |publisher|
     receiver.get('level/#') do |topic, message|
       log "received: [#{topic}] #{message.length}"
       level = topic.split('/', 2).last
-      if level.to_i <= our_level
+      if level.to_i < our_level
         log "msg too low level, ignoring: [#{topic}] #{message.length}"
       else
         publisher.publish(topic, message)
