@@ -34,19 +34,19 @@ services:
     command: bash -c 'sleep 10 && mosquitto_pub -h mosquitto-1 -p 1883 -t level/2 -m "test"'
     restart: always
 
-  logger-1:
-    image: rranshous/mosquitto
-    links:
-      - mosquitto-1
-    command: mosquitto_sub -v -h mosquitto-1 -p 1883 -t '#' -q 2
-    restart: always
+  #logger-1:
+  #  image: rranshous/mosquitto
+  #  links:
+  #    - mosquitto-1
+  #  command: mosquitto_sub -v -h mosquitto-1 -p 1883 -t '#' -q 2
+  #  restart: always
 
-  logger-2:
-    image: rranshous/mosquitto
-    links:
-      - mosquitto-2
-    command: mosquitto_sub -v -h mosquitto-2 -p 1883 -t '#' -q 2
-    restart: always
+  #logger-2:
+  #  image: rranshous/mosquitto
+  #  links:
+  #    - mosquitto-2
+  #  command: mosquitto_sub -v -h mosquitto-2 -p 1883 -t '#' -q 2
+  #  restart: always
 
   mosquitto-1:
     image: rranshous/mosquitto
