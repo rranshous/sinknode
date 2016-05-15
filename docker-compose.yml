@@ -10,6 +10,16 @@ services:
       - mosquitto-2
     restart: always
 
+  drain:
+    build: .
+    entrypoint: ['./drain.rb']
+    command: ["mosquitto-2"]
+    volumes:
+      - ./data:/src/data
+    links:
+      - mosquitto-2
+    restart: always
+
   publisher-high:
     image: rranshous/mosquitto
     links:
