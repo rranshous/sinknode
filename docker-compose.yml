@@ -24,14 +24,14 @@ services:
     image: rranshous/mosquitto
     links:
       - mosquitto-1
-    command: bash -c 'echo "publishing after sleep" && sleep 5 && mosquitto_pub -h mosquitto-1 -p 1883 -t level/7 -m "test"'
+    command: bash -c 'sleep 5 && mosquitto_pub -h mosquitto-1 -p 1883 -t level/7 -m "test"'
     restart: always
 
   publisher-low:
     image: rranshous/mosquitto
     links:
       - mosquitto-1
-    command: bash -c 'echo "publishing after sleep" && sleep 10 && mosquitto_pub -h mosquitto-1 -p 1883 -t level/2 -m "test"'
+    command: bash -c 'sleep 10 && mosquitto_pub -h mosquitto-1 -p 1883 -t level/2 -m "test"'
     restart: always
 
   logger-1:
