@@ -23,7 +23,8 @@ target_host = target_host.split(':',2).first
 raise "missing target_host" if target_host.nil?
 
 # open up a subprocesses which subscribes to all level messages
-sub_command = "docker run -i rranshous/mosquitto mosquitto_sub -v -h #{source_host} -p #{source_port} -t 'level/#' -q 2 -i bridge-#{our_level}-#{source_host}-#{target_host}"
+#docker_sub_command = "docker run -i rranshous/mosquitto mosquitto_sub -v -h #{source_host} -p #{source_port} -t 'level/#' -q 2 -i bridge-#{our_level}-#{source_host}-#{source_host}"
+sub_command = "mosquitto_sub -v -h #{source_host} -p #{source_port} -t 'level/#' -q 2 -i bridge-#{our_level}-#{source_host}-#{target_host}"
 puts "opening subprocesses with command: #{sub_command}"
 
 Open3.popen3(sub_command) do |stdin, stdout, stderr, wait_thr|
@@ -35,7 +36,7 @@ Open3.popen3(sub_command) do |stdin, stdout, stderr, wait_thr|
       next
     end
     puts "line: #{line}"
-    topic, data = line.split " ", 2
+    topic, data = line.split(" ", 2).map(&:chomp)
     puts "topic: #{topic}"
     puts "data: #{data}"
     _, level = topic.split('/',3)
@@ -48,13 +49,16 @@ Open3.popen3(sub_command) do |stdin, stdout, stderr, wait_thr|
     end
     # use the pub command to push this message down hill
     # maintain the topic
-    pub_command = "docker run -i rranshous/mosquitto mosquitto_pub -h #{target_host} -p #{target_port} -t #{topic} -s"
+    #docker_pub_command = "docker run -i rranshous/mosquitto mosquitto_pub -h #{target_host} -p #{target_port} -t #{topic} -s"
+    pub_command = "mosquitto_pub -h #{target_host} -p #{target_port} -t #{topic} -s"
     puts "opening subprocesses with command: #{pub_command}"
-    pub_io = IO.popen(pub_command)
-    puts "pub_io: #{pub_io}"
-    puts "writing to pub_io: #{data}"
-    pub_io.write(data)
-    puts "done writing"
+    Open3.popen3(pub_command) do |i, _, _, _|
+      puts "writing to pub input: #{data}"
+      i.write(data)
+      puts "closing input"
+      i.close
+      puts "done writing"
+    end
   end
 end
 

@@ -1,4 +1,7 @@
-FROM ruby:2.2.3
+FROM rranshous/mosquitto
+
+RUN apt-get update
+RUN apt-get install -y ruby
 
 ADD ./ /src
 WORKDIR /src
