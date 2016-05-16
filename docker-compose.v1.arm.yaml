@@ -1,0 +1,58 @@
+sinknode:
+  build: .
+  command: ["4", "mosquitto-1:1883", "mosquitto-2:1883"]
+  links:
+    - mosquitto-1
+    - mosquitto-2
+  restart: always
+
+drain:
+  build: .
+  entrypoint: ['./drain.rb']
+  command: ["mosquitto-2"]
+  volumes:
+    - ./data:/src/data
+  links:
+    - mosquitto-2
+  restart: always
+
+publisher-high:
+  image: rranshous/mosquitto-rpi
+  links:
+    - mosquitto-1
+  command: bash -c 'sleep 5 && mosquitto_pub -h mosquitto-1 -p 1883 -t level/7 -m "test"'
+  restart: always
+
+publisher-low:
+  image: rranshous/mosquitto-rpi
+  links:
+    - mosquitto-1
+  command: bash -c 'sleep 10 && mosquitto_pub -h mosquitto-1 -p 1883 -t level/2 -m "test"'
+  restart: always
+
+#logger-1:
+#  image: rranshous/mosquitto-rpi
+#  links:
+#    - mosquitto-1
+#  command: mosquitto_sub -v -h mosquitto-1 -p 1883 -t '#' -q 2
+#  restart: always
+
+#logger-2:
+#  image: rranshous/mosquitto-rpi
+#  links:
+#    - mosquitto-2
+#  command: mosquitto_sub -v -h mosquitto-2 -p 1883 -t '#' -q 2
+#  restart: always
+
+mosquitto-1:
+  image: rranshous/mosquitto-rpi
+  ports:
+    - "9001:9001"
+    - "1883:1883"
+
+mosquitto-2:
+  image: rranshous/mosquitto-rpi
+  ports:
+    - "9002:9001"
+    - "1884:1883"
+
