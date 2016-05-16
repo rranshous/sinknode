@@ -1,7 +1,5 @@
 sinknode:
-  build:
-    context: ./
-    dockerfile: Dockerfile-rpi
+  build: ./
   command: ["4", "mosquitto1:1883", "mosquitto2:1883"]
   links:
     - mosquitto1
@@ -9,9 +7,7 @@ sinknode:
   restart: always
 
 drain:
-  build:
-    context: ./
-    dockerfile: Dockerfile-rpi
+  build: ./
   entrypoint: ['./drain.rb']
   command: ["mosquitto2"]
   volumes:
