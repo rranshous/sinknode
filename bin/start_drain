@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+echo "starting mosquitto server"
+docker run -d -p 1883:1883 --name mosquitto rranshous/mosquitto-rpi
+
+echo "starting drain"
+docker run -d --name drain -v /data/:/src/data --link=mosquitto --entrypoint=/src/bin/drain.rb rranshous/sinknode-rpi mosquitto
