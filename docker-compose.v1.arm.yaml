@@ -1,56 +1,60 @@
 sinknode:
-  build: .
-  command: ["4", "mosquitto-1:1883", "mosquitto-2:1883"]
+  build:
+    context: ./
+    dockerfile: Dockerfile-rpi
+  command: ["4", "mosquitto1:1883", "mosquitto2:1883"]
   links:
-    - mosquitto-1
-    - mosquitto-2
+    - mosquitto1
+    - mosquitto2
   restart: always
 
 drain:
-  build: .
+  build:
+    context: ./
+    dockerfile: Dockerfile-rpi
   entrypoint: ['./drain.rb']
-  command: ["mosquitto-2"]
+  command: ["mosquitto2"]
   volumes:
     - ./data:/src/data
   links:
-    - mosquitto-2
+    - mosquitto2
   restart: always
 
-publisher-high:
+publisherhigh:
   image: rranshous/mosquitto-rpi
   links:
-    - mosquitto-1
-  command: bash -c 'sleep 5 && mosquitto_pub -h mosquitto-1 -p 1883 -t level/7 -m "test"'
+    - mosquitto1
+  command: bash -c 'sleep 5 && mosquitto_pub -h mosquitto1 -p 1883 -t level/7 -m "test"'
   restart: always
 
-publisher-low:
+publisherlow:
   image: rranshous/mosquitto-rpi
   links:
-    - mosquitto-1
-  command: bash -c 'sleep 10 && mosquitto_pub -h mosquitto-1 -p 1883 -t level/2 -m "test"'
+    - mosquitto1
+  command: bash -c 'sleep 10 && mosquitto_pub -h mosquitto1 -p 1883 -t level/2 -m "test"'
   restart: always
 
 #logger-1:
 #  image: rranshous/mosquitto-rpi
 #  links:
-#    - mosquitto-1
-#  command: mosquitto_sub -v -h mosquitto-1 -p 1883 -t '#' -q 2
+#    - mosquitto1
+#  command: mosquitto_sub -v -h mosquitto1 -p 1883 -t '#' -q 2
 #  restart: always
 
 #logger-2:
 #  image: rranshous/mosquitto-rpi
 #  links:
-#    - mosquitto-2
-#  command: mosquitto_sub -v -h mosquitto-2 -p 1883 -t '#' -q 2
+#    - mosquitto2
+#  command: mosquitto_sub -v -h mosquitto2 -p 1883 -t '#' -q 2
 #  restart: always
 
-mosquitto-1:
+mosquitto1:
   image: rranshous/mosquitto-rpi
   ports:
     - "9001:9001"
     - "1883:1883"
 
-mosquitto-2:
+mosquitto2:
   image: rranshous/mosquitto-rpi
   ports:
     - "9002:9001"
