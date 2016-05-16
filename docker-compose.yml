@@ -9,6 +9,9 @@ services:
       - mosquitto-1
       - mosquitto-2
     restart: always
+    depends_on:
+      - mosquitto-1
+      - mosquitto-2
 
   drain:
     build: .
@@ -19,6 +22,8 @@ services:
     links:
       - mosquitto-2
     restart: always
+    depends_on:
+      - mosquitto-2
 
   publisher-high:
     image: rranshous/mosquitto
