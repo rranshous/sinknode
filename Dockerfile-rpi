@@ -1,0 +1,8 @@
+FROM hypriot/rpi-ruby:2.2.2
+
+RUN gem install bundler
+
+ADD ./ /src
+WORKDIR /src
+RUN bundle
+ENTRYPOINT ["/src/sinknode.rb"]
