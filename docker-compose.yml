@@ -15,7 +15,7 @@ services:
 
   drain:
     build: .
-    entrypoint: ['./drain.rb']
+    entrypoint: ['./bin/drain.rb']
     command: ["mosquitto-2"]
     volumes:
       - ./data:/src/data

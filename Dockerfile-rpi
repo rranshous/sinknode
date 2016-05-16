@@ -5,4 +5,4 @@ RUN gem install bundler
 ADD ./ /src
 WORKDIR /src
 RUN bundle
-ENTRYPOINT ["/src/sinknode.rb"]
+ENTRYPOINT ["/src/bin/sinknode.rb"]
