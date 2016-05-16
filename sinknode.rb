@@ -45,6 +45,7 @@ MQTT::Client.connect(host: target_host, port: target_port.to_i) do |publisher|
       if level.to_i < our_level
         log "msg too low level, ignoring: [#{topic}] #{message.length}"
       else
+        log "publishing: [#{topic}] #{message.length}"
         publisher.publish(topic, message)
       end
     end
