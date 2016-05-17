@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# 1 main drain
+# 2 on high speed network w/ drain
+# 4 on always on bridge to #2
+# 8 high bandwidth always on wireless connection to #4 or #2
+# 16 low bandwidth always on wireless connection similar to #8
+# 32 mobile high bandwidth wireless connection
+# 64 mobile low bandwidth wireless connection
+
+echo "starting mosquitto"
+docker run -d -p 1883:1883 --name mosquitto rranshous/mosquitto-rpi
+sleep 5
+echo "starting sinknode"
+docker run -d --name sinknode --link mosquitto rranshous/sinknode-rpi 32 mosquitto 10.0.0.33
