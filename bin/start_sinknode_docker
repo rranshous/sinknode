@@ -8,6 +8,8 @@
 # 32 mobile high bandwidth wireless connection
 # 64 mobile low bandwidth wireless connection
 
-echo "mosquitto should already be started"
-./sinknode.rb 32 localhost 10.0.0.33
-
+echo "starting mosquitto"
+docker run -d -p 1883:1883 --name mosquitto rranshous/mosquitto-rpi
+sleep 5
+echo "starting sinknode"
+docker run -d --name sinknode --link mosquitto rranshous/sinknode-rpi 32 mosquitto 10.0.0.33
