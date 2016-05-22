@@ -9,5 +9,5 @@
 # 64 mobile low bandwidth wireless connection
 
 echo "mosquitto should already be started"
-./sinknode.rb 32 localhost 10.0.0.33
+./sinknode.rb 32 localhost 10.0.0.30
 
