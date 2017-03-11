@@ -12,4 +12,4 @@ echo "starting mosquitto"
 docker run -d -p 1883:1883 --name mosquitto rranshous/mosquitto-rpi
 sleep 5
 echo "starting sinknode"
-docker run -d --name sinknode --link mosquitto rranshous/sinknode-rpi 32 mosquitto 10.0.0.33
+docker run -d --restart always --name sinknode --link mosquitto rranshous/sinknode-rpi 32 mosquitto 10.0.0.33
