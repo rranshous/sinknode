@@ -1,3 +1,14 @@
 data flows down hill using mqtt
 
 move data through mobile nodes
+
+each node has a height in the terrain
+current height defs:
+
+# 1 main drain
+# 2 on high speed network w/ drain
+# 4 on always on bridge to #2
+# 8 high bandwidth always on wireless connection to #4 or #2
+# 16 low bandwidth always on wireless connection similar to #8
+# 32 mobile high bandwidth wireless connection
+# 64 mobile low bandwidth wireless connection
