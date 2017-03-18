@@ -29,6 +29,12 @@ target_host = ARGV.shift
 target_host, target_port = target_host.split(':',2)
 target_port ||= '1883'
 raise "missing target_host" if target_host.nil?
+unique_name = ARGV.shift
+if unique_name.nil?
+  puts "MUST SET UNIQUE NAME, plz use same name every time!"
+  exit 1
+end
+puts "unique name: #{unique_name}"
 
 log "starting sinknode: #{source_host}:#{source_port} =(#{our_level})> " +
      "#{target_host}:#{target_port}"
@@ -37,10 +43,10 @@ loop do
   begin
     # publisher
     log "connecting to publisher"
-    MQTT::Client.connect(host: target_host, port: target_port.to_i) do |publisher|
+    MQTT::Client.connect(host: target_host, port: target_port.to_i, will_qos: 1, client_id: unique_name) do |publisher|
       # subscriber
       log "connecting to subscriber"
-      MQTT::Client.connect(host: source_host, port: source_port.to_i) do |receiver|
+      MQTT::Client.connect(host: source_host, port: source_port.to_i, will_qos: 1, client_id: unique_name, clean_session: false) do |receiver|
         receiver.get('level/#') do |topic, message|
           log "received: [#{topic}] #{message.length}"
           _, level, _ = topic.split('/', 3)
@@ -57,6 +63,5 @@ loop do
     puts "EXCEPTION: #{ex}"
     puts "restarting in 10 seconds"
     sleep 10
-    retry
   end
 end
